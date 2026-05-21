@@ -17,6 +17,8 @@ import fcntl
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+from runtime_logger import log_event, log_exception, runtime_log_file
+
 CST = timezone(timedelta(hours=8))
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_DIR = SCRIPT_DIR.parent
@@ -67,6 +69,7 @@ def normalize_data(data):
 
 
 def print_error(message, exit_code=1):
+    log_event("goal_card_manager.error", ok=False, error=message, exit_code=exit_code)
     print(json.dumps({"ok": False, "error": message}, ensure_ascii=False))
     sys.exit(exit_code)
 
@@ -96,8 +99,10 @@ def load_data(filepath=None):
         filepath = get_today_file()
     filepath = Path(filepath)
     if filepath.exists():
+        log_event("goal_card_manager.load_data", file=str(filepath), exists=True)
         with open(filepath, "r", encoding="utf-8") as f:
             return normalize_data(json.load(f))
+    log_event("goal_card_manager.load_data", file=str(filepath), exists=False)
     return normalize_data({})
 
 
@@ -113,16 +118,26 @@ def save_data(data, filepath=None):
         f.flush()
         os.fsync(f.fileno())
     os.replace(tmp_path, filepath)
+    log_event(
+        "goal_card_manager.save_data",
+        file=str(filepath),
+        goal_cards=len(data.get("goal_cards", [])),
+        reviews=len(data.get("reviews", [])),
+        daily_summaries=len(data.get("daily_summaries", [])),
+        heartbeat_logs=len(data.get("heartbeat_logs", [])),
+    )
 
 
 def update_data(mutator, filepath=None):
     if filepath is None:
         filepath = get_today_file()
     filepath = Path(filepath)
+    log_event("goal_card_manager.update_start", file=str(filepath))
     with FileLock(filepath):
         data = load_data(filepath)
         result = mutator(data)
         save_data(data, filepath)
+    log_event("goal_card_manager.update_done", file=str(filepath), result=summarize_result(result))
     return result
 
 
@@ -141,6 +156,27 @@ def find_card(data, card_index):
 def get_latest_review_for_card(data, card_index):
     matches = [r for r in data.get("reviews", []) if r.get("card_index") == card_index]
     return matches[-1] if matches else None
+
+
+def summarize_result(result):
+    if not isinstance(result, dict):
+        return result
+    summary = {}
+    for key in (
+        "card_index",
+        "review_index",
+        "summary_index",
+        "status",
+        "node",
+        "event_type",
+        "active_card_found",
+        "push_status",
+        "output_channel",
+        "goal_card_path",
+    ):
+        if key in result:
+            summary[key] = result[key]
+    return summary or {"keys": sorted(result.keys())}
 
 
 def create_goal_card(boss_want, deliverable, min_version, deadline, trap_forecast, first_cut):
@@ -164,6 +200,7 @@ def create_goal_card(boss_want, deliverable, min_version, deadline, trap_forecas
         return card
 
     card = update_data(mutator)
+    log_event("goal_card_manager.create_done", card_index=card.get("card_index"), status=card.get("status"))
     print(json.dumps({"ok": True, "card": card}, ensure_ascii=False))
 
 
@@ -190,6 +227,7 @@ def add_review(card_index, did_what, output, verdict, reason, next_action):
         return review
 
     review = update_data(mutator)
+    log_event("goal_card_manager.review_done", card_index=card_index, review_index=review.get("review_index"), verdict=verdict)
     print(json.dumps({"ok": True, "review": review}, ensure_ascii=False))
 
 
@@ -213,6 +251,7 @@ def add_daily_summary(final_output, goal_delta, pretend_effort, effective_action
         return summary
 
     summary = update_data(mutator)
+    log_event("goal_card_manager.summary_done", summary_index=summary.get("summary_index"), verdict=verdict)
     print(json.dumps({"ok": True, "daily_summary": summary}, ensure_ascii=False))
 
 
@@ -232,6 +271,7 @@ def update_goal_status(card_index, status):
         return {"card_index": card_index, "status": status}
 
     result = update_data(mutator)
+    log_event("goal_card_manager.status_update_done", card_index=card_index, status=status)
     print(json.dumps({"ok": True, **result}, ensure_ascii=False))
 
 
@@ -252,6 +292,7 @@ def add_heartbeat(node, event_type, active_card_found, action_taken, push_status
     if push_status not in VALID_PUSH_STATUSES:
         print_error(f"invalid push_status: {push_status}")
     if output_channel not in VALID_OUTPUT_CHANNELS:
+        log_event("goal_card_manager.channel_rejected", output_channel=output_channel, node=node, event_type=event_type)
         print_error(f"invalid output_channel for coaching message: {output_channel}")
 
     def mutator(data):
@@ -271,6 +312,14 @@ def add_heartbeat(node, event_type, active_card_found, action_taken, push_status
         return entry
 
     entry = update_data(mutator)
+    log_event(
+        "goal_card_manager.heartbeat_done",
+        node=node,
+        event_type=event_type,
+        active_card_found=entry.get("active_card_found"),
+        push_status=push_status,
+        output_channel=output_channel,
+    )
     print(json.dumps({"ok": True, "heartbeat": entry}, ensure_ascii=False))
 
 
@@ -298,7 +347,15 @@ def status():
         "latest_daily_summary": data.get("daily_summaries", [])[-1] if data.get("daily_summaries") else None,
         "total_heartbeats": len(data.get("heartbeat_logs", [])),
         "latest_heartbeat": data.get("heartbeat_logs", [])[-1] if data.get("heartbeat_logs") else None,
+        "runtime_log_file": str(runtime_log_file()),
     }
+    log_event(
+        "goal_card_manager.status_done",
+        active_card_found=bool(active),
+        total_cards=result["total_cards"],
+        total_reviews=result["total_reviews"],
+        total_heartbeats=result["total_heartbeats"],
+    )
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
@@ -328,43 +385,60 @@ Commands:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print(USAGE)
-        sys.exit(1)
+    command = sys.argv[1] if len(sys.argv) > 1 else None
+    log_event("goal_card_manager.command_start", command=command, base_dir=str(BASE_DIR), today_file=str(get_today_file()))
+    try:
+        if len(sys.argv) < 2:
+            print(USAGE)
+            log_event("goal_card_manager.command_usage_error", ok=False, reason="missing_command")
+            sys.exit(1)
 
-    cmd = sys.argv[1]
+        cmd = sys.argv[1]
 
-    if cmd == "status":
-        status()
-    elif cmd == "create":
-        if len(sys.argv) < 8:
-            print("Usage: goal_card_manager.py create <boss_want> <deliverable> <min_version> <deadline> <trap_forecast> <first_cut>")
+        if cmd == "status":
+            status()
+        elif cmd == "create":
+            if len(sys.argv) < 8:
+                print("Usage: goal_card_manager.py create <boss_want> <deliverable> <min_version> <deadline> <trap_forecast> <first_cut>")
+                log_event("goal_card_manager.command_usage_error", ok=False, command=cmd, reason="missing_args")
+                sys.exit(1)
+            create_goal_card(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7])
+        elif cmd == "review":
+            if len(sys.argv) < 8:
+                print("Usage: goal_card_manager.py review <card_index> <did_what> <output> <verdict> <reason> <next_action>")
+                log_event("goal_card_manager.command_usage_error", ok=False, command=cmd, reason="missing_args")
+                sys.exit(1)
+            add_review(int(sys.argv[2]), sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7])
+        elif cmd == "summary":
+            if len(sys.argv) < 9:
+                print("Usage: goal_card_manager.py summary <final_output> <goal_delta> <pretend_effort> <effective_action> <verdict> <tomorrow_first_cut> <coach_note>")
+                log_event("goal_card_manager.command_usage_error", ok=False, command=cmd, reason="missing_args")
+                sys.exit(1)
+            add_daily_summary(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8])
+        elif cmd == "update_status":
+            if len(sys.argv) < 4:
+                print("Usage: goal_card_manager.py update_status <card_index> <status>")
+                log_event("goal_card_manager.command_usage_error", ok=False, command=cmd, reason="missing_args")
+                sys.exit(1)
+            update_goal_status(int(sys.argv[2]), sys.argv[3])
+        elif cmd == "heartbeat":
+            if len(sys.argv) < 6:
+                print("Usage: goal_card_manager.py heartbeat <node> <event_type> <active_card_found> <action_taken> [push_status] [reason] [output_channel]")
+                log_event("goal_card_manager.command_usage_error", ok=False, command=cmd, reason="missing_args")
+                sys.exit(1)
+            push_status = sys.argv[6] if len(sys.argv) > 6 else "success"
+            reason = sys.argv[7] if len(sys.argv) > 7 else ""
+            output_channel = sys.argv[8] if len(sys.argv) > 8 else "coze"
+            add_heartbeat(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], push_status, reason, output_channel)
+        else:
+            print(f"Unknown command: {cmd}\n")
+            print(USAGE)
+            log_event("goal_card_manager.command_usage_error", ok=False, command=cmd, reason="unknown_command")
             sys.exit(1)
-        create_goal_card(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7])
-    elif cmd == "review":
-        if len(sys.argv) < 8:
-            print("Usage: goal_card_manager.py review <card_index> <did_what> <output> <verdict> <reason> <next_action>")
-            sys.exit(1)
-        add_review(int(sys.argv[2]), sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7])
-    elif cmd == "summary":
-        if len(sys.argv) < 9:
-            print("Usage: goal_card_manager.py summary <final_output> <goal_delta> <pretend_effort> <effective_action> <verdict> <tomorrow_first_cut> <coach_note>")
-            sys.exit(1)
-        add_daily_summary(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8])
-    elif cmd == "update_status":
-        if len(sys.argv) < 4:
-            print("Usage: goal_card_manager.py update_status <card_index> <status>")
-            sys.exit(1)
-        update_goal_status(int(sys.argv[2]), sys.argv[3])
-    elif cmd == "heartbeat":
-        if len(sys.argv) < 6:
-            print("Usage: goal_card_manager.py heartbeat <node> <event_type> <active_card_found> <action_taken> [push_status] [reason] [output_channel]")
-            sys.exit(1)
-        push_status = sys.argv[6] if len(sys.argv) > 6 else "success"
-        reason = sys.argv[7] if len(sys.argv) > 7 else ""
-        output_channel = sys.argv[8] if len(sys.argv) > 8 else "coze"
-        add_heartbeat(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], push_status, reason, output_channel)
-    else:
-        print(f"Unknown command: {cmd}\n")
-        print(USAGE)
-        sys.exit(1)
+        log_event("goal_card_manager.command_done", ok=True, command=cmd)
+    except SystemExit as exc:
+        log_event("goal_card_manager.command_exit", ok=(exc.code == 0), command=command, exit_code=exc.code)
+        raise
+    except Exception as exc:
+        log_exception("goal_card_manager.command_exception", exc)
+        raise

@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+from runtime_logger import log_event, log_exception
+
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIR = ROOT
 POLICY_FILE = SKILL_DIR / "policy" / "channel_policy.json"
@@ -70,21 +72,31 @@ def display_path(file_path):
 
 
 def main():
-    policy = load_policy()
-    files = expand_targets(sys.argv[1:])
-    violations = find_violations(files, policy["forbidden_terms"] + policy["forbidden_output_channels"])
-    if violations:
-        print(json.dumps({
-            "ok": False,
-            "error": "anti-involution coach channel pollution detected",
-            "violations": violations,
-        }, ensure_ascii=False, indent=2))
-        sys.exit(1)
-    print(json.dumps({
-        "ok": True,
-        "checked_files": [display_path(path) for path in files],
-        "allowed_output_channels": policy["allowed_output_channels"],
-    }, ensure_ascii=False, indent=2))
+    log_event("validate_channels.start", targets=sys.argv[1:] or [display_path(path) for path in DEFAULT_SCAN_TARGETS])
+    try:
+        policy = load_policy()
+        files = expand_targets(sys.argv[1:])
+        violations = find_violations(files, policy["forbidden_terms"] + policy["forbidden_output_channels"])
+        if violations:
+            log_event("validate_channels.failed", ok=False, checked_files=[display_path(path) for path in files], violations=violations)
+            print(json.dumps({
+                "ok": False,
+                "error": "anti-involution coach channel pollution detected",
+                "violations": violations,
+            }, ensure_ascii=False, indent=2))
+            sys.exit(1)
+        result = {
+            "ok": True,
+            "checked_files": [display_path(path) for path in files],
+            "allowed_output_channels": policy["allowed_output_channels"],
+        }
+        log_event("validate_channels.done", **result)
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+    except SystemExit:
+        raise
+    except Exception as exc:
+        log_exception("validate_channels.exception", exc)
+        raise
 
 
 if __name__ == "__main__":

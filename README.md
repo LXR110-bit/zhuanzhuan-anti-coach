@@ -39,3 +39,19 @@ GOAL_CARD_DIR=/tmp/anti-coach-test python3 scripts/goal_card_manager.py heartbea
 ```
 
 最后一条应该失败，用于确认非 `coze` 渠道被拒绝。
+
+## 运行日志
+
+脚本会写结构化 JSONL 运行日志，用于排查扣子日程冷启动和渠道污染：
+
+- 默认路径：`data/logs/anti_coach_runtime.jsonl`
+- 可用环境变量覆盖：`ANTI_COACH_LOG_FILE=/tmp/anti-coach-runtime.jsonl`
+- 每行包含 `ts/event/pid/cwd/argv`，以及命令结果、数据文件路径、渠道拒绝原因或校验结果。
+- 默认会脱敏五题答案等命令参数，只保留命令名和参数数量；如需临时排查原始参数，可设置 `ANTI_COACH_LOG_RAW_ARGS=1`。
+- `data/logs/` 默认不提交 Git，只用于本地和扣子运行诊断。
+
+常用查看：
+
+```bash
+tail -50 data/logs/anti_coach_runtime.jsonl
+```

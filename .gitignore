@@ -1,4 +1,5 @@
 data/goal_cards/
+data/logs/
 *.lock
 *.tmp
 __pycache__/
