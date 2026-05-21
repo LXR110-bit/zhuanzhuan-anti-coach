@@ -1,0 +1,5 @@
+data/goal_cards/
+*.lock
+*.tmp
+__pycache__/
+.DS_Store
