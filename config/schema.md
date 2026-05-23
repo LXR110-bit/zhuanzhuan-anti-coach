@@ -93,3 +93,16 @@ Required fields:
 - `push_status`: One of `success`, `failed`, `skipped`, `unknown`.
 - `reason`: Why it succeeded, failed, or skipped.
 - `output_channel`: Must be `coze`. Coaching messages reject every other output channel.
+
+## runtime logs
+
+Runtime logs are JSONL files under `data/logs/`. They are diagnostic artifacts and must not be committed with code.
+
+- `anti_coach_runtime.jsonl`: low-level script execution, command args, cwd, file paths, exceptions.
+- `anti_coach_stability.jsonl`: code and scheduler stability, including command success/failure, path checks, channel rejection, runner completion.
+- `anti_coach_usage.jsonl`: user/product usage, including node triggers, goal cards created, weekly plans created, daily reviews written, summaries created.
+
+Environment overrides:
+- `ANTI_COACH_LOG_FILE`
+- `ANTI_COACH_STABILITY_LOG_FILE`
+- `ANTI_COACH_USAGE_LOG_FILE`

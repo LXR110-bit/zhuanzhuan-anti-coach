@@ -12,6 +12,8 @@ from pathlib import Path
 CST = timezone(timedelta(hours=8))
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_LOG_FILE = ROOT / "data" / "logs" / "anti_coach_runtime.jsonl"
+DEFAULT_STABILITY_LOG_FILE = ROOT / "data" / "logs" / "anti_coach_stability.jsonl"
+DEFAULT_USAGE_LOG_FILE = ROOT / "data" / "logs" / "anti_coach_usage.jsonl"
 
 
 def now_iso():
@@ -23,6 +25,20 @@ def runtime_log_file():
     if override:
         return Path(override).expanduser().resolve()
     return DEFAULT_LOG_FILE
+
+
+def stability_log_file():
+    override = os.environ.get("ANTI_COACH_STABILITY_LOG_FILE")
+    if override:
+        return Path(override).expanduser().resolve()
+    return DEFAULT_STABILITY_LOG_FILE
+
+
+def usage_log_file():
+    override = os.environ.get("ANTI_COACH_USAGE_LOG_FILE")
+    if override:
+        return Path(override).expanduser().resolve()
+    return DEFAULT_USAGE_LOG_FILE
 
 
 def _json_safe(value):
@@ -41,11 +57,10 @@ def safe_argv():
     return sys.argv[:2] + [f"<{len(sys.argv) - 2} args redacted>"]
 
 
-def log_event(event, **fields):
-    path = runtime_log_file()
-    path.parent.mkdir(parents=True, exist_ok=True)
+def base_record(event, log_type, **fields):
     record = {
         "ts": now_iso(),
+        "log_type": log_type,
         "event": event,
         "pid": os.getpid(),
         "cwd": os.getcwd(),
@@ -54,15 +69,33 @@ def log_event(event, **fields):
     }
     for key, value in fields.items():
         record[key] = _json_safe(value)
+    return record
+
+
+def write_jsonl(path, record):
+    path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
 
 
+def log_event(event, **fields):
+    write_jsonl(runtime_log_file(), base_record(event, "runtime", **fields))
+
+
+def log_stability(event, **fields):
+    write_jsonl(stability_log_file(), base_record(event, "stability", **fields))
+
+
+def log_usage(event, **fields):
+    write_jsonl(usage_log_file(), base_record(event, "usage", **fields))
+
+
 def log_exception(event, exc):
-    log_event(
-        event,
-        ok=False,
-        error=str(exc),
-        error_type=exc.__class__.__name__,
-        traceback=traceback.format_exc(limit=8),
-    )
+    fields = {
+        "ok": False,
+        "error": str(exc),
+        "error_type": exc.__class__.__name__,
+        "traceback": traceback.format_exc(limit=8),
+    }
+    log_event(event, **fields)
+    log_stability(event, **fields)

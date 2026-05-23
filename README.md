@@ -64,10 +64,18 @@ GOAL_CARD_DIR=/tmp/anti-coach-test python3 scripts/goal_card_manager.py heartbea
 
 ## 运行日志
 
-默认日志路径：`data/logs/anti_coach_runtime.jsonl`。如需避免验证写入仓内日志，可设置：
+默认写 3 份 JSONL 日志：
+
+- `data/logs/anti_coach_runtime.jsonl`：脚本级运行细节，用来排查异常。
+- `data/logs/anti_coach_stability.jsonl`：代码和调度稳定性，用来看 runner 是否成功、路径/remote 是否正确、命令是否失败。
+- `data/logs/anti_coach_usage.jsonl`：日常使用情况，用来看周规划、日校准、日复盘、目标卡有没有真的发生。
+
+如需避免验证写入仓内日志，可设置：
 
 ```bash
 ANTI_COACH_LOG_FILE=/tmp/anti-coach-runtime.jsonl
+ANTI_COACH_STABILITY_LOG_FILE=/tmp/anti-coach-stability.jsonl
+ANTI_COACH_USAGE_LOG_FILE=/tmp/anti-coach-usage.jsonl
 ```
 
 如果日志里出现旧目录名 `anti-pretend-effort`，说明扣子没有切到新仓路径，必须先修正日程 description 或工作目录。

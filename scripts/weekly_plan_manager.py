@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from runtime_logger import log_event, log_exception
+from runtime_logger import log_event, log_exception, log_stability, log_usage
 
 
 CST = timezone(timedelta(hours=8))
@@ -46,6 +46,14 @@ def create_json(raw_json):
         json.dump(plan, f, ensure_ascii=False, indent=2)
         f.write("\n")
     log_event("weekly_plan_manager.create_done", file=str(path), week_start=plan["week_start"])
+    log_usage(
+        "anti_coach.weekly_plan_created",
+        week_start=plan["week_start"],
+        weekly_plan_path=str(path),
+        key_results_count=len(plan.get("key_results", [])) if isinstance(plan.get("key_results"), list) else 0,
+        protected_slots_count=len(plan.get("protected_slots", [])) if isinstance(plan.get("protected_slots"), list) else 0,
+        has_cuts=bool(plan.get("cuts")),
+    )
     print_json({"ok": True, "weekly_plan_path": str(path), "week_start": plan["week_start"]})
 
 
@@ -56,6 +64,7 @@ def latest():
     path = files[-1]
     with open(path, "r", encoding="utf-8") as f:
         plan = json.load(f)
+    log_usage("anti_coach.weekly_plan_read", weekly_plan_path=str(path), week_start=plan.get("week_start"))
     print_json({"ok": True, "weekly_plan_path": str(path), "weekly_plan": plan})
 
 
@@ -87,6 +96,7 @@ def main():
         else:
             print(USAGE)
             sys.exit(1)
+        log_stability("weekly_plan_manager.command_done", ok=True, command=cmd)
     except SystemExit:
         raise
     except Exception as exc:

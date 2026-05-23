@@ -10,7 +10,7 @@ from io import StringIO
 from pathlib import Path
 
 from goal_card_manager import add_heartbeat, load_data, get_active_goal, get_latest_review_for_card, get_today_file
-from runtime_logger import log_event, log_exception
+from runtime_logger import log_event, log_exception, log_stability, log_usage
 
 
 CST = timezone(timedelta(hours=8))
@@ -107,8 +107,10 @@ def path_check():
         errors.append("unexpected_git_remote")
     if errors:
         log_event("coze_schedule_runner.path_check_failed", ok=False, errors=errors, **ctx)
+        log_stability("coze_schedule_runner.path_check_failed", ok=False, errors=errors, **ctx)
         return False, ctx, errors
     log_event("coze_schedule_runner.path_check_done", ok=True, **ctx)
+    log_stability("coze_schedule_runner.path_check_done", ok=True, **ctx)
     return True, ctx, []
 
 
@@ -253,6 +255,32 @@ def run_node(node):
         },
     }
     log_event("coze_schedule_runner.node_done", node=node, active_card_found=active_found, push_status=push_status, output_channel="coze")
+    log_stability(
+        "coze_schedule_runner.node_done",
+        ok=True,
+        node=node,
+        active_card_found=active_found,
+        push_status=push_status,
+        reason=reason,
+        output_channel="coze",
+        repo_root=ctx.get("root"),
+        git_branch=ctx.get("branch"),
+        git_remote=ctx.get("remote"),
+    )
+    log_usage(
+        "anti_coach.node_triggered",
+        node=node,
+        active_card_found=active_found,
+        push_status=push_status,
+        reason=reason,
+        next_step=result["next_step"],
+        has_coach_message=bool(message),
+        total_cards=state["total_cards"],
+        total_reviews=state["total_reviews"],
+        total_daily_summaries=state["total_daily_summaries"],
+        total_heartbeats_before_run=state["total_heartbeats"],
+        week_start=result["context_paths"]["week_start"],
+    )
     print_json(result)
 
 

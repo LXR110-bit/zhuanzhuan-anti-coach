@@ -17,7 +17,7 @@ import fcntl
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-from runtime_logger import log_event, log_exception, runtime_log_file
+from runtime_logger import log_event, log_exception, log_stability, log_usage, runtime_log_file
 
 CST = timezone(timedelta(hours=8))
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -85,6 +85,7 @@ def normalize_data(data):
 
 def print_error(message, exit_code=1):
     log_event("goal_card_manager.error", ok=False, error=message, exit_code=exit_code)
+    log_stability("goal_card_manager.error", ok=False, error=message, exit_code=exit_code)
     print(json.dumps({"ok": False, "error": message}, ensure_ascii=False))
     sys.exit(exit_code)
 
@@ -216,6 +217,15 @@ def create_goal_card(boss_want, deliverable, min_version, deadline, trap_forecas
 
     card = update_data(mutator)
     log_event("goal_card_manager.create_done", card_index=card.get("card_index"), status=card.get("status"))
+    log_usage(
+        "anti_coach.goal_card_created",
+        card_date=card.get("card_date"),
+        card_index=card.get("card_index"),
+        status=card.get("status"),
+        deadline=card.get("deadline"),
+        has_deliverable=bool(card.get("deliverable")),
+        has_min_version=bool(card.get("min_version")),
+    )
     print(json.dumps({"ok": True, "card": card}, ensure_ascii=False))
 
 
@@ -243,6 +253,15 @@ def add_review(card_index, did_what, output, verdict, reason, next_action):
 
     review = update_data(mutator)
     log_event("goal_card_manager.review_done", card_index=card_index, review_index=review.get("review_index"), verdict=verdict)
+    log_usage(
+        "anti_coach.review_created",
+        card_date=review.get("card_date"),
+        card_index=card_index,
+        review_index=review.get("review_index"),
+        verdict=verdict,
+        has_output=bool(output),
+        has_next_action=bool(next_action),
+    )
     print(json.dumps({"ok": True, "review": review}, ensure_ascii=False))
 
 
@@ -267,6 +286,14 @@ def add_daily_summary(final_output, goal_delta, pretend_effort, effective_action
 
     summary = update_data(mutator)
     log_event("goal_card_manager.summary_done", summary_index=summary.get("summary_index"), verdict=verdict)
+    log_usage(
+        "anti_coach.daily_summary_created",
+        summary_date=summary.get("summary_date"),
+        summary_index=summary.get("summary_index"),
+        verdict=verdict,
+        has_final_output=bool(final_output),
+        has_tomorrow_first_cut=bool(tomorrow_first_cut),
+    )
     print(json.dumps({"ok": True, "daily_summary": summary}, ensure_ascii=False))
 
 
@@ -293,6 +320,14 @@ def add_daily_review(results_completed, business_observation, thinking_gap, tomo
         "thinking_gap_journal_path": str(thinking_path),
     }
     log_event("goal_card_manager.daily_review_done", **result)
+    log_usage(
+        "anti_coach.daily_review_created",
+        review_date=review_date,
+        results_completed=results_completed,
+        has_business_observation=bool(business_observation),
+        has_thinking_gap=bool(thinking_gap),
+        has_tomorrow_top_3=bool(tomorrow_top_3),
+    )
     print(json.dumps({"ok": True, "daily_review": result}, ensure_ascii=False))
 
 
@@ -313,6 +348,7 @@ def update_goal_status(card_index, status):
 
     result = update_data(mutator)
     log_event("goal_card_manager.status_update_done", card_index=card_index, status=status)
+    log_usage("anti_coach.goal_card_status_updated", card_index=card_index, status=status)
     print(json.dumps({"ok": True, **result}, ensure_ascii=False))
 
 
@@ -361,6 +397,15 @@ def add_heartbeat(node, event_type, active_card_found, action_taken, push_status
         push_status=push_status,
         output_channel=output_channel,
     )
+    log_usage(
+        "anti_coach.heartbeat_logged",
+        node=node,
+        event_type=event_type,
+        active_card_found=entry.get("active_card_found"),
+        push_status=push_status,
+        reason=reason,
+        output_channel=output_channel,
+    )
     print(json.dumps({"ok": True, "heartbeat": entry}, ensure_ascii=False))
 
 
@@ -395,6 +440,14 @@ def status():
         active_card_found=bool(active),
         total_cards=result["total_cards"],
         total_reviews=result["total_reviews"],
+        total_heartbeats=result["total_heartbeats"],
+    )
+    log_usage(
+        "anti_coach.status_read",
+        active_card_found=bool(active),
+        total_cards=result["total_cards"],
+        total_reviews=result["total_reviews"],
+        total_daily_summaries=result["total_daily_summaries"],
         total_heartbeats=result["total_heartbeats"],
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -486,8 +539,10 @@ if __name__ == "__main__":
             log_event("goal_card_manager.command_usage_error", ok=False, command=cmd, reason="unknown_command")
             sys.exit(1)
         log_event("goal_card_manager.command_done", ok=True, command=cmd)
+        log_stability("goal_card_manager.command_done", ok=True, command=cmd, base_dir=str(BASE_DIR), today_file=str(get_today_file()))
     except SystemExit as exc:
         log_event("goal_card_manager.command_exit", ok=(exc.code == 0), command=command, exit_code=exc.code)
+        log_stability("goal_card_manager.command_exit", ok=(exc.code == 0), command=command, exit_code=exc.code)
         raise
     except Exception as exc:
         log_exception("goal_card_manager.command_exception", exc)
