@@ -51,14 +51,42 @@ Required fields:
 - `tomorrow_first_cut`: First concrete action for tomorrow.
 - `coach_note`: Short coach summary, under 200 Chinese characters when possible.
 
+## weekly_plans
+
+Weekly plan is created on Sunday 21:00 or Monday morning before work. It is stored as `data/weekly_plans/{week_start}.json` and becomes the source of truth for daily calibration.
+
+Required fields:
+- `week_start`: Monday date in Asia/Shanghai, formatted as `YYYY-MM-DD`.
+- `key_results`: Up to 3 weekly outcomes with role, minimum version, and deadline.
+- `task_buckets`: Major work blocks with estimated hours.
+- `cuts`: What is killed, simplified, or delegated this week.
+- `protected_slots`: Important-but-not-urgent time blocks.
+- `daily_blocks`: Planned deep/collaboration/execution blocks by weekday.
+- `growth_focus_this_week`: How the monthly compass becomes action this week.
+
+## daily_reviews
+
+Daily review is created at 18:00 and stored as markdown in `data/daily_reviews/{YYYY-MM-DD}.md`.
+
+Required fields:
+- `results_completed`: Completion of the morning top 3.
+- `business_observation`: One concrete data/user/business observation.
+- `thinking_gap`: One gap between current working style and boss/higher-level perspective.
+- `tomorrow_top_3`: Tomorrow's top 3 blocks.
+- `one_line_summary`: One sentence worth remembering.
+
+The same run also appends:
+- `data/business_journal/{YYYY-MM-DD}.md`
+- `data/thinking_gap_journal/{YYYY-MM-DD}.md`
+
 ## heartbeat_logs
 
 Diagnostic layer for external scheduler (e.g. Coze) heartbeats. Every heartbeat MUST write a log entry, even if it skips action. The manager validates `event_type`, `active_card_found`, and `push_status`.
 
 Required fields:
 - `heartbeat_time`: Local timestamp.
-- `node`: Schedule node, such as `10:30`, `12:00`, `21:00`.
-- `event_type`: One of `goal_start`, `heartbeat`, `segment_close`, `daily_close`.
+- `node`: Schedule node, such as `10:00`, `14:00`, `18:00`, `weekly_21:00`.
+- `event_type`: One of `goal_start`, `heartbeat`, `segment_close`, `daily_close`, `mid_check`, `weekly_plan`.
 - `goal_card_path`: JSON file path used by the run.
 - `active_card_found`: Boolean.
 - `action_taken`: What the run attempted.

@@ -1,5 +1,9 @@
 data/goal_cards/
 data/logs/
+data/weekly_plans/
+data/daily_reviews/
+data/business_journal/
+data/thinking_gap_journal/
 *.lock
 *.tmp
 __pycache__/

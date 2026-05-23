@@ -20,6 +20,8 @@ CODE_FILES = (
     "README.md",
     "SKILL.md",
     ".gitignore",
+    "REDESIGN.md",
+    "扣子接入说明.md",
 )
 RAW_LOG_PREFIXES = (
     "data/logs/",
@@ -27,6 +29,10 @@ RAW_LOG_PREFIXES = (
 )
 ANTI_RUNTIME_PREFIXES = (
     "data/goal_cards/",
+    "data/weekly_plans/",
+    "data/daily_reviews/",
+    "data/business_journal/",
+    "data/thinking_gap_journal/",
 )
 MARKET_RUNTIME_PREFIXES = (
     "data/report_cards/",

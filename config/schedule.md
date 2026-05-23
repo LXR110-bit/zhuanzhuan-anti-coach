@@ -1,27 +1,43 @@
-# Schedule
+# Schedule v2(精简版)
 
-## Daily Rhythm
+## 设计原则
+- **从 13-14 次/天 → 3 次/天**
+- **30 分钟心跳全部砍掉**
+- **新增"周节点":每周日晚做 1 次深度规划**
 
-| Time | Node | Action |
-|------|------|--------|
-| 10:00 | Morning goal card | Start Phase1 if there is no active goal_card. |
-| 10:30 | Morning heartbeat | Run Phase2 if active goal_card exists. |
-| 11:00 | Morning heartbeat | Run Phase2 if active goal_card exists. |
-| 11:30 | Morning heartbeat | Run Phase2 if active goal_card exists. |
-| 12:00 | Morning close | Summarize morning output and identify fake-effort segment if no usable output exists. |
-| 13:30 | Afternoon start | Read active goal_card and confirm the first 30-minute action. Do not reopen planning. |
-| 14:00-17:30 | Afternoon heartbeat | Run Phase2 every 30 minutes if active goal_card exists. |
-| 18:00 | Dinner handoff | Close the afternoon segment, record current blocker, and define the 19:00 first action. |
-| 19:00 | Evening start | Ask only what can be minimally delivered before 21:00. |
-| 19:30 | Evening heartbeat | Run Phase2 if active goal_card exists. |
-| 20:00 | Evening heartbeat | Run Phase2 if active goal_card exists. |
-| 20:30 | Evening heartbeat | Run Phase2 if active goal_card exists. |
-| 21:00 | Daily close | Run Phase3 daily summary and decide final verdict. |
+## Daily Rhythm(工作日)
+
+| 时间 | 节点 | 时长 | 动作 |
+|------|------|------|------|
+| 10:00 | 日校准 | 5-10 分钟 | 翻账本式 3 问,基于 weekly_plan |
+| 14:00 | 中段感知(可选) | 3 分钟 | 上午完成度 + 业务异常,可跳过 |
+| 18:00 | 下班复盘 | 15 分钟 | 5 模块:结果 / 业务观察 / 思维差异 / 明日大块 / 总结 |
+
+**砍掉**:10:30 / 11:00 / 11:30 / 12:00 / 13:30 / 14:30 / 15:00 / 15:30 / 16:00 / 16:30 / 17:00 / 17:30 / 19:00 / 19:30 / 20:00 / 20:30 / 21:00 这 17 个节点
+
+## Weekly Rhythm
+
+| 时间 | 节点 | 时长 | 动作 |
+|------|------|------|------|
+| 周日 21:00 | 周规划 | 60-90 分钟 | 6 阶段深度对话,产出 weekly_plan.json |
+| 周五 17:30 | 周回顾(可选) | 15 分钟 | 本周 KR 达成度 + 角色产出审视(纳入 18:00 复盘) |
+
+## Monthly Rhythm
+
+| 时间 | 节点 | 时长 | 动作 |
+|------|------|------|------|
+| 月初 | 月锚维护 | 30 分钟 | 用户手动更新 my_compass.md(不需 Agent) |
 
 ## Rules
 
-- Ordinary 30-minute heartbeats only run inside work blocks: 10:00-12:00, 13:30-18:00, 19:00-21:00.
-- 12:00, 18:00, and 21:00 are close/handoff nodes, not normal heartbeats.
-- Non-work blocks do not send normal pressure prompts unless the user explicitly asks for review.
-- If a heartbeat cannot find an active goal_card, it should log the miss and avoid asking Phase2 questions.
-- If the same node fires repeatedly, prefer one concise reminder over duplicate prompts.
+- 工作日 3 个节点之外,**绝不主动骚扰**——除非用户主动触发
+- 周末日 Agent 完全沉默,只保留周日晚的周 Agent
+- 节假日按周末处理
+- 如果用户连续 2 天没回应任何节点,Agent 主动降级为"沉默模式",停止触发,等待用户主动唤起
+- 如果用户主动说"今天先不打卡了"——尊重,当天剩余节点全部跳过
+
+## Channel Policy
+(继承 v1,不变)
+- 输出渠道固定 `coze`
+- 防串台规则不变
+- `validate_channels.py` 继续在提交前运行

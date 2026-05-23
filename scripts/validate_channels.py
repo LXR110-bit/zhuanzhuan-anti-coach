@@ -17,6 +17,20 @@ DEFAULT_SCAN_TARGETS = [
 ]
 SCHEDULE_TEMPLATE_DIR = SKILL_DIR / "templates" / "coze_schedules"
 EXPECTED_SCHEDULE_RUNNER = "python3 scripts/coze_schedule_runner.py"
+EXPECTED_TEMPLATE_FILES = {
+    "10_00_goal_start.md",
+    "14_00_mid_check.md",
+    "18_00_evening_review.md",
+    "sunday_21_00_weekly_planner.md",
+    "NEW_TEMPLATES.md",
+}
+DEPRECATED_TEMPLATE_FILES = {
+    "12_00_morning_close.md",
+    "13_30_afternoon_start.md",
+    "18_00_dinner_handoff.md",
+    "19_00_evening_start.md",
+    "21_00_daily_close.md",
+}
 FORBIDDEN_TEMPLATE_COMMANDS = [
     "scripts/goal_card_manager.py heartbeat",
     "goal_card_manager.py heartbeat",
@@ -72,7 +86,20 @@ def find_violations(files, forbidden_terms):
 
 def validate_schedule_templates():
     violations = []
+    template_files = {path.name for path in SCHEDULE_TEMPLATE_DIR.glob("*.md")}
+    for missing in sorted(EXPECTED_TEMPLATE_FILES - template_files):
+        violations.append({
+            "file": f"templates/coze_schedules/{missing}",
+            "error": "missing_v2_schedule_template",
+        })
+    for deprecated in sorted(DEPRECATED_TEMPLATE_FILES & template_files):
+        violations.append({
+            "file": f"templates/coze_schedules/{deprecated}",
+            "error": "deprecated_v1_schedule_template_present",
+        })
     for file_path in sorted(SCHEDULE_TEMPLATE_DIR.glob("*.md")):
+        if file_path.name == "NEW_TEMPLATES.md":
+            continue
         text = file_path.read_text(encoding="utf-8")
         if EXPECTED_SCHEDULE_RUNNER not in text:
             violations.append({

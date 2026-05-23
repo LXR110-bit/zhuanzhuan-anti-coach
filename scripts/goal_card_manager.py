@@ -39,7 +39,7 @@ BASE_DIR = resolve_base_dir()
 VALID_STATUSES = {"active", "completed", "abandoned"}
 VALID_REVIEW_VERDICTS = {"在轨", "跑偏", "伪装忙碌"}
 VALID_SUMMARY_VERDICTS = {"有效推进", "部分推进", "假装努力"}
-VALID_EVENT_TYPES = {"goal_start", "heartbeat", "segment_close", "daily_close"}
+VALID_EVENT_TYPES = {"goal_start", "heartbeat", "segment_close", "daily_close", "mid_check", "weekly_plan"}
 VALID_PUSH_STATUSES = {"success", "failed", "skipped", "unknown"}
 VALID_OUTPUT_CHANNELS = {"coze"}
 DEFAULT_DATA = {
@@ -58,8 +58,23 @@ def now_str():
     return datetime.now(CST).strftime("%Y-%m-%d %H:%M:%S")
 
 
+def tomorrow_str():
+    return (datetime.now(CST) + timedelta(days=1)).strftime("%Y-%m-%d")
+
+
 def get_today_file():
     return BASE_DIR / f"{today_str()}.json"
+
+
+def data_dir(name):
+    return SKILL_DIR / "data" / name
+
+
+def append_markdown(filepath, content):
+    filepath = Path(filepath)
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+    with open(filepath, "a", encoding="utf-8") as f:
+        f.write(content.rstrip() + "\n")
 
 
 def normalize_data(data):
@@ -255,6 +270,32 @@ def add_daily_summary(final_output, goal_delta, pretend_effort, effective_action
     print(json.dumps({"ok": True, "daily_summary": summary}, ensure_ascii=False))
 
 
+def add_daily_review(results_completed, business_observation, thinking_gap, tomorrow_top_3, one_line_summary):
+    review_date = today_str()
+    daily_review_path = data_dir("daily_reviews") / f"{review_date}.md"
+    business_path = data_dir("business_journal") / f"{review_date}.md"
+    thinking_path = data_dir("thinking_gap_journal") / f"{review_date}.md"
+    content = f"""## {review_date}
+
+- 今日结果: {results_completed}
+- 业务观察: {business_observation}
+- 思维差异: {thinking_gap}
+- 明日大块: {tomorrow_top_3}
+- 一句话总结: {one_line_summary}
+"""
+    append_markdown(daily_review_path, content)
+    append_markdown(business_path, f"## {review_date}\n- 观察: {business_observation}\n")
+    append_markdown(thinking_path, f"## {review_date}\n- 差异: {thinking_gap}\n")
+    result = {
+        "review_date": review_date,
+        "daily_review_path": str(daily_review_path),
+        "business_journal_path": str(business_path),
+        "thinking_gap_journal_path": str(thinking_path),
+    }
+    log_event("goal_card_manager.daily_review_done", **result)
+    print(json.dumps({"ok": True, "daily_review": result}, ensure_ascii=False))
+
+
 def update_goal_status(card_index, status):
     if status not in VALID_STATUSES:
         print_error(f"invalid status: {status}")
@@ -280,7 +321,7 @@ def add_heartbeat(node, event_type, active_card_found, action_taken, push_status
     写入一条心跳诊断日志。Coze 不可靠时，靠这张表反查哑火节点。
 
     node: 10:00 / 10:30 / 12:00 / 13:30 / 14:00 / ... / 21:00
-    event_type: goal_start | heartbeat | segment_close | daily_close
+    event_type: goal_start | heartbeat | segment_close | daily_close | mid_check | weekly_plan
     active_card_found: "true" / "false"
     push_status: success | failed | skipped | unknown
     output_channel: coze
@@ -374,11 +415,14 @@ Commands:
   summary <final_output> <goal_delta> <pretend_effort> <effective_action> <verdict> <tomorrow_first_cut> <coach_note>
       Write a Phase3 daily summary. verdict in {有效推进, 部分推进, 假装努力}.
 
+  daily_review <results_completed> <business_observation> <thinking_gap> <tomorrow_top_3> <one_line_summary>
+      Write a v2 daily review markdown and append business/thinking journals.
+
   update_status <card_index> <status>
       status in {active, completed, abandoned}.
 
   heartbeat <node> <event_type> <active_card_found> <action_taken> [push_status] [reason] [output_channel]
-      Log a heartbeat run. event_type in {goal_start, heartbeat, segment_close, daily_close}.
+      Log a heartbeat run. event_type in {goal_start, heartbeat, segment_close, daily_close, mid_check, weekly_plan}.
       active_card_found is "true" or "false". push_status defaults to success.
       output_channel defaults to coze; coaching messages reject all other channels.
 """
@@ -415,6 +459,12 @@ if __name__ == "__main__":
                 log_event("goal_card_manager.command_usage_error", ok=False, command=cmd, reason="missing_args")
                 sys.exit(1)
             add_daily_summary(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], sys.argv[8])
+        elif cmd == "daily_review":
+            if len(sys.argv) < 7:
+                print("Usage: goal_card_manager.py daily_review <results_completed> <business_observation> <thinking_gap> <tomorrow_top_3> <one_line_summary>")
+                log_event("goal_card_manager.command_usage_error", ok=False, command=cmd, reason="missing_args")
+                sys.exit(1)
+            add_daily_review(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
         elif cmd == "update_status":
             if len(sys.argv) < 4:
                 print("Usage: goal_card_manager.py update_status <card_index> <status>")
