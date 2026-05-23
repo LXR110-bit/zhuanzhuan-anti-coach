@@ -4,14 +4,11 @@
 
 执行步骤：
 1. 进入 `/Users/lilixiaoran/工作/转转/zhuanzhuan-anti-coach`。
-2. 运行 `python3 scripts/goal_card_manager.py status`。
-3. 运行 `python3 scripts/goal_card_manager.py heartbeat 12:00 segment_close <active_card_found> morning_close success "" coze`。
-4. 如果没有 active goal_card，沉默退出。
-5. 如果有 active goal_card，对照 deliverable、min_version 和 latest_review_for_active 收束上午产出。
-
-开场口径：
-上午两小时收尾。早上定的是 `[deliverable]`，最小版本是 `[min_version]`。上午实际交出来什么？没有就直说，我们看哪段白干了。
+2. 只运行：`python3 scripts/coze_schedule_runner.py 12:00`。
+3. 如果返回 `coach_message` 为空，沉默退出。
+4. 如果返回 `coach_message` 不为空，按原文在扣子主对话输出。
 
 禁止事项：
+- 不要手写 heartbeat 命令。
 - 不要发送到任何外部群聊。
 - 不要携带任何机器人地址、外部推送地址或群聊配置。

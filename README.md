@@ -19,6 +19,14 @@ cd /Users/lilixiaoran/工作/转转/zhuanzhuan-anti-coach
 - `templates/coze_schedules/19_00_evening_start.md`
 - `templates/coze_schedules/21_00_daily_close.md`
 
+每个日程模板都只允许调用统一入口：
+
+```bash
+python3 scripts/coze_schedule_runner.py <node>
+```
+
+不要在扣子日程里手写 `goal_card_manager.py heartbeat` 参数；runner 会自动完成 `status -> heartbeat -> coach_message`，避免参数错位。
+
 ## 渠道规则
 
 - coaching 消息只允许输出到扣子主对话，渠道名固定为 `coze`。
@@ -32,8 +40,9 @@ python3 scripts/validate_channels.py
 ## 验证命令
 
 ```bash
-python3 -m py_compile scripts/goal_card_manager.py scripts/validate_channels.py
+python3 -m py_compile scripts/goal_card_manager.py scripts/validate_channels.py scripts/runtime_logger.py scripts/coze_schedule_runner.py
 python3 scripts/validate_channels.py
+GOAL_CARD_DIR=/tmp/anti-coach-test python3 scripts/coze_schedule_runner.py 10:00
 GOAL_CARD_DIR=/tmp/anti-coach-test python3 scripts/goal_card_manager.py heartbeat 19:00 heartbeat true evening_start success ok coze
 GOAL_CARD_DIR=/tmp/anti-coach-test python3 scripts/goal_card_manager.py heartbeat 19:00 heartbeat true evening_start success ok wecom
 ```
@@ -55,6 +64,8 @@ GOAL_CARD_DIR=/tmp/anti-coach-test python3 scripts/goal_card_manager.py heartbea
 ```bash
 tail -50 data/logs/anti_coach_runtime.jsonl
 ```
+
+如果日志里出现旧目录名 `anti-pretend-effort`，说明扣子没有切到新仓路径，必须先修正日程 description 或工作目录。
 
 ## 提交前防串台
 

@@ -15,6 +15,12 @@ DEFAULT_SCAN_TARGETS = [
     SKILL_DIR / "config" / "schedule.md",
     SKILL_DIR / "config" / "schema.md",
 ]
+SCHEDULE_TEMPLATE_DIR = SKILL_DIR / "templates" / "coze_schedules"
+EXPECTED_SCHEDULE_RUNNER = "python3 scripts/coze_schedule_runner.py"
+FORBIDDEN_TEMPLATE_COMMANDS = [
+    "scripts/goal_card_manager.py heartbeat",
+    "goal_card_manager.py heartbeat",
+]
 SKIP_FILES = {
     SKILL_DIR / "SKILL.md",
     POLICY_FILE,
@@ -64,6 +70,25 @@ def find_violations(files, forbidden_terms):
     return violations
 
 
+def validate_schedule_templates():
+    violations = []
+    for file_path in sorted(SCHEDULE_TEMPLATE_DIR.glob("*.md")):
+        text = file_path.read_text(encoding="utf-8")
+        if EXPECTED_SCHEDULE_RUNNER not in text:
+            violations.append({
+                "file": display_path(file_path),
+                "error": "missing_coze_schedule_runner_command",
+            })
+        for command in FORBIDDEN_TEMPLATE_COMMANDS:
+            if command in text:
+                violations.append({
+                    "file": display_path(file_path),
+                    "error": "template_must_not_call_heartbeat_directly",
+                    "term": command,
+                })
+    return violations
+
+
 def display_path(file_path):
     try:
         return str(file_path.relative_to(ROOT))
@@ -77,6 +102,8 @@ def main():
         policy = load_policy()
         files = expand_targets(sys.argv[1:])
         violations = find_violations(files, policy["forbidden_terms"] + policy["forbidden_output_channels"])
+        template_violations = validate_schedule_templates() if not sys.argv[1:] else []
+        violations.extend(template_violations)
         if violations:
             log_event("validate_channels.failed", ok=False, checked_files=[display_path(path) for path in files], violations=violations)
             print(json.dumps({
