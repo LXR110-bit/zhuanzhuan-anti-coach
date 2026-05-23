@@ -1,0 +1,47 @@
+{
+  "archived_at": "2026-05-15T18:42:42.933246",
+  "scan_time": "2026-05-15",
+  "product_id": "rtx_3070",
+  "data": {
+    "xianyu_market": {
+      "price": 1434,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-15T10:04:21+08:00",
+      "samples": [
+        1348.0,
+        1391.0,
+        1434,
+        1477.0,
+        1520.0
+      ],
+      "median": 1434,
+      "prev_price": 1424
+    },
+    "xianyu_official": {
+      "price": 1132,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-12T19:35:32+08:00",
+      "source": "xianyu_official_mobile",
+      "prev_price": 1000
+    },
+    "aihuishou": {
+      "base_price": 1160,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-12T14:22:08+08:00",
+      "after_coupon": null,
+      "source": "aihuishou_mobile_v2",
+      "prev_price": 994
+    },
+    "change_1d_by_platform": {
+      "xianyu_market": null,
+      "xianyu_official": null,
+      "aihuishou": null,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": null,
+    "baseline_date": "2026年4月"
+  }
+}

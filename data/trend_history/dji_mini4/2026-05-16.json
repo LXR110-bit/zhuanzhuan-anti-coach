@@ -1,0 +1,44 @@
+{
+  "archived_at": "2026-05-16T06:39:50.751775",
+  "scan_time": "2026-05-16",
+  "product_id": "dji_mini4",
+  "data": {
+    "xianyu_market": {
+      "price": 2850,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-15T10:12:42+08:00",
+      "samples": [
+        2679.0,
+        2764.5,
+        2850,
+        2935.5,
+        3021.0
+      ],
+      "median": 2850,
+      "prev_price": 2859
+    },
+    "xianyu_official": {
+      "price": 600,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-10T19:33:50+08:00",
+      "source": "xianyu_official_mobile"
+    },
+    "aihuishou": {
+      "base_price": 1840,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-07T14:29:11+08:00",
+      "source": "aihuishou_mobile_v2"
+    },
+    "change_1d_by_platform": {
+      "xianyu_market": 0.0,
+      "xianyu_official": 0.0,
+      "aihuishou": 0.0,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": 0.0,
+    "baseline_date": "2026年5月"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "archived_at": "2026-05-15T18:42:43.488864",
+  "scan_time": "2026-05-15",
+  "product_id": "dji_mini4k",
+  "data": {
+    "name": "DJI Mini 4K",
+    "xianyu_market": {},
+    "xianyu_official": {},
+    "aihuishou": {
+      "base_price": 404,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-10T14:26:00+08:00",
+      "source": "aihuishou_mobile_v2"
+    },
+    "change_1d_by_platform": {
+      "xianyu_market": null,
+      "xianyu_official": null,
+      "aihuishou": null,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": null,
+    "baseline_date": "2026年5月"
+  }
+}

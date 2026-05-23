@@ -1,0 +1,45 @@
+{
+  "archived_at": "2026-05-15T18:42:42.598125",
+  "scan_time": "2026-05-15",
+  "product_id": "dji_mini5_pro",
+  "data": {
+    "xianyu_market": {
+      "avg_price": 4642,
+      "currency": "CNY",
+      "collected_at": "2026-05-15T06:36:51+08:00",
+      "change_1d": 0.0,
+      "price": 4745,
+      "samples": [
+        4460.3,
+        4602.6,
+        4745,
+        4887.4,
+        5029.7
+      ],
+      "median": 4745,
+      "prev_price": 4800
+    },
+    "xianyu_official": {
+      "price": 3390,
+      "currency": "CNY",
+      "collected_at": "2026-05-09T18:50:15+08:00",
+      "change_1d": 0.0,
+      "prev_price": 2604,
+      "source": "xianyu_official_mobile"
+    },
+    "aihuishou": {
+      "base_price": 3180,
+      "currency": "CNY",
+      "collected_at": "2026-05-03T19:25:27+08:00",
+      "change_1d": 0.0
+    },
+    "change_1d_by_platform": {
+      "xianyu_market": null,
+      "xianyu_official": null,
+      "aihuishou": null,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": null,
+    "baseline_date": "2026年5月"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "archived_at": "2026-05-16T06:39:50.576386",
+  "scan_time": "2026-05-16",
+  "product_id": "dji_pocket4",
+  "data": {
+    "name": "DJI Pocket 4",
+    "xianyu_market": {
+      "price": 2812,
+      "samples": [
+        2643.3,
+        2727.6,
+        2812,
+        2896.4,
+        2980.7
+      ],
+      "median": 2812,
+      "currency": "CNY",
+      "collected_at": "2026-05-05T21:58:11+08:00",
+      "change_1d": 0.0,
+      "prev_price": 2812
+    },
+    "baseline_date": "2026年4月",
+    "change_1d_by_platform": {
+      "xianyu_market": 0.0,
+      "xianyu_official": null,
+      "aihuishou": null,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": 0.0
+  }
+}

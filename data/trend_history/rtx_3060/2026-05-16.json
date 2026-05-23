@@ -1,0 +1,44 @@
+{
+  "archived_at": "2026-05-16T06:39:50.327411",
+  "scan_time": "2026-05-16",
+  "product_id": "rtx_3060",
+  "data": {
+    "name": "微星 RTX 3060",
+    "xianyu_market": {
+      "price": 1542,
+      "samples": [
+        1449.5,
+        1495.7,
+        1542,
+        1588.3,
+        1634.5
+      ],
+      "median": 1542,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "prev_price": 950,
+      "collected_at": "2026-05-12T21:56:05+08:00"
+    },
+    "xianyu_official": {
+      "price": null,
+      "currency": "CNY"
+    },
+    "aihuishou": {
+      "base_price": 993,
+      "after_coupon": null,
+      "currency": "CNY",
+      "range": "727-1260",
+      "source": "aihuishou_mobile",
+      "collected_at": "2026-05-03T20:39:00+08:00",
+      "change_1d": 0.0
+    },
+    "baseline_date": "2026年4月",
+    "change_1d_by_platform": {
+      "xianyu_market": 0.0,
+      "xianyu_official": null,
+      "aihuishou": 0.0,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": 0.0
+  }
+}

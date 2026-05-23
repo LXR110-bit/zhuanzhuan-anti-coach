@@ -1,0 +1,48 @@
+{
+  "archived_at": "2026-05-16T06:39:50.182408",
+  "scan_time": "2026-05-16",
+  "product_id": "i5_13600k",
+  "data": {
+    "name": "i5 13600K",
+    "xianyu_market": {
+      "price": 1269,
+      "samples": [
+        1192.9,
+        1230.9,
+        1269,
+        1307.1,
+        1345.1
+      ],
+      "median": 1269,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-15T06:33:49+08:00",
+      "prev_price": 1275
+    },
+    "xianyu_official": {
+      "price": 794,
+      "currency": "CNY",
+      "source": "xianyu_official_mobile",
+      "collected_at": "2026-05-10T18:52:54+08:00",
+      "change_1d": 0.0,
+      "prev_price": 958
+    },
+    "aihuishou": {
+      "base_price": 782,
+      "after_coupon": null,
+      "currency": "CNY",
+      "source": "aihuishou_mobile_v2",
+      "collected_at": "2026-05-12T13:32:47+08:00",
+      "change_1d": 0.0,
+      "prev_price": 1288
+    },
+    "baseline_date": "2026年4月",
+    "change_1d_by_platform": {
+      "xianyu_market": 0.0,
+      "xianyu_official": 0.0,
+      "aihuishou": 0.0,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": 0.0
+  }
+}

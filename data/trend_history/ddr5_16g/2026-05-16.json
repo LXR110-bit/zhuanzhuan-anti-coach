@@ -1,0 +1,44 @@
+{
+  "archived_at": "2026-05-16T06:39:50.258823",
+  "scan_time": "2026-05-16",
+  "product_id": "ddr5_16g",
+  "data": {
+    "name": "金士顿 DDR5 16G",
+    "xianyu_market": {
+      "price": 350,
+      "samples": [
+        300,
+        320,
+        350,
+        380,
+        400
+      ],
+      "median": 350,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "prev_price": 350
+    },
+    "xianyu_official": {
+      "price": null,
+      "currency": "CNY",
+      "source": "xianyu_official_mobile",
+      "collected_at": "2026-05-03T17:57:00+08:00"
+    },
+    "aihuishou": {
+      "base_price": 495,
+      "after_coupon": null,
+      "currency": "CNY",
+      "source": "aihuishou_mobile_v2",
+      "collected_at": "2026-05-03T16:37:48+08:00",
+      "change_1d": 0.0
+    },
+    "baseline_date": "2026年4月",
+    "change_1d_by_platform": {
+      "xianyu_market": 0.0,
+      "xianyu_official": null,
+      "aihuishou": 0.0,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": 0.0
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "goal_cards": [],
+  "reviews": [],
+  "daily_summaries": [],
+  "heartbeat_logs": [
+    {
+      "heartbeat_time": "2026-05-21 10:05:04",
+      "node": "10:00",
+      "event_type": "goal_start",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-21.json",
+      "active_card_found": false,
+      "action_taken": "no_active_card_抛五题",
+      "push_status": "success",
+      "reason": ""
+    }
+  ]
+}

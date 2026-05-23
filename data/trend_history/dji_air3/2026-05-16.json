@@ -1,0 +1,43 @@
+{
+  "archived_at": "2026-05-16T06:39:50.394903",
+  "scan_time": "2026-05-16",
+  "product_id": "dji_air3",
+  "data": {
+    "name": "大疆 Air 3",
+    "xianyu_market": {
+      "price": 6188,
+      "samples": [
+        5816.7,
+        6002.4,
+        6188,
+        6373.6,
+        6559.3
+      ],
+      "median": 6188,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "prev_price": 4349,
+      "collected_at": "2026-05-11T22:00:11+08:00"
+    },
+    "xianyu_official": {
+      "price": null,
+      "currency": "CNY"
+    },
+    "aihuishou": {
+      "base_price": 4140,
+      "after_coupon": null,
+      "currency": "CNY",
+      "source": "aihuishou_mobile",
+      "collected_at": "2026-05-03T20:39:00+08:00",
+      "change_1d": 0.0
+    },
+    "change_1d_by_platform": {
+      "xianyu_market": 0.0,
+      "xianyu_official": null,
+      "aihuishou": 0.0,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": 0.0,
+    "baseline_date": "2026年5月"
+  }
+}

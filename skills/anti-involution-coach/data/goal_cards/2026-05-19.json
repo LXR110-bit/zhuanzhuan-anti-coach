@@ -1,0 +1,82 @@
+{
+  "goal_cards": [
+    {
+      "card_date": "2026-05-19",
+      "card_index": 1,
+      "boss_want": "新品大促期间回收需求刺激策略",
+      "deliverable": "精准需求路径（结果搜索）+模糊需求路径（活动承接）的策略方案",
+      "min_version": "新品活动节奏玩法框架，覆盖订阅用户刺激回收",
+      "deadline": "本周五",
+      "trap_forecast": "又陷数据深挖3小时不做方案",
+      "first_cut": "先写精准需求路径的3个触点方案",
+      "status": "active"
+    }
+  ],
+  "reviews": [],
+  "daily_summaries": [
+    {
+      "summary_date": "2026-05-19",
+      "summary_index": 1,
+      "final_output": "无策略文档产出，仅完成闲鱼价格采集截图36张+数码闲聊站帖子",
+      "goal_delta": "goal_card要求交付策略方案，实际产出零文档；trap命中——全天5小时以上在采价截图",
+      "pretend_effort": "06:30-07:00批量采价+13:00-14:00二轮采价，两段时间共2.5小时+，均属无策略产出的数据动作",
+      "effective_action": "无有效动作。今天所有动作均未推进策略文档产出，策略框架未开始撰写",
+      "verdict": "假装努力",
+      "tomorrow_first_cut": "明早第一件事：打开空白文档，先写精准需求路径三条触点标题（不开任何数据文件）",
+      "coach_note": "命中预测陷阱。全天采价5小时+，策略文档0字。核心问题：以为'掌握了数据'就等于'有策略'。明天第一刀：文档先开，采价靠边"
+    },
+    {
+      "summary_date": "2026-05-19",
+      "summary_index": 2,
+      "final_output": "零策略文档，全天采价截图36张",
+      "goal_delta": "min_version新品活动框架未动笔，陷阱完全命中——5小时+全花在数据采集上",
+      "pretend_effort": "06:30-18:36三轮采价共5小时+，策略文档0字",
+      "effective_action": "无有效动作推进策略产出",
+      "verdict": "假装努力",
+      "tomorrow_first_cut": "打开空白文档写精准需求路径三条触点标题，不开任何数据文件",
+      "coach_note": "陷阱完全命中。采价5小时+，策略文档0字。数据是燃料不是目的地——你加了满箱油但没出发。明天第一刀：开文档写标题，不开数据文件。"
+    }
+  ],
+  "heartbeat_logs": [
+    {
+      "heartbeat_time": "2026-05-19 10:05:20",
+      "node": "10:05",
+      "event_type": "goal_start",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-19.json",
+      "active_card_found": false,
+      "action_taken": "no_active_card",
+      "push_status": "success",
+      "reason": ""
+    },
+    {
+      "heartbeat_time": "2026-05-19 12:04:25",
+      "node": "12:00",
+      "event_type": "segment_close",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-19.json",
+      "active_card_found": false,
+      "action_taken": "no_active_card",
+      "push_status": "success",
+      "reason": ""
+    },
+    {
+      "heartbeat_time": "2026-05-19 18:05:04",
+      "node": "18:00",
+      "event_type": "segment_close",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-19.json",
+      "active_card_found": true,
+      "action_taken": "log_only",
+      "push_status": "success",
+      "reason": ""
+    },
+    {
+      "heartbeat_time": "2026-05-19 20:56:40",
+      "node": "21:00",
+      "event_type": "daily_close",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-19.json",
+      "active_card_found": true,
+      "action_taken": "phase3_summary",
+      "push_status": "success",
+      "reason": "verdict_假装努力_策略文档0字_全天采价5小时以上"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "archived_at": "2026-05-16T06:39:50.222750",
+  "scan_time": "2026-05-16",
+  "product_id": "dji_mini4_pro",
+  "data": {
+    "name": "DJI Mini 4 Pro",
+    "xianyu_market": {
+      "price": 3742,
+      "samples": [
+        3517.5,
+        3629.7,
+        3742,
+        3854.3,
+        3966.5
+      ],
+      "median": 3742,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-06T07:12:03+08:00",
+      "prev_price": 3742
+    },
+    "xianyu_official": {
+      "price": 4420,
+      "currency": "CNY",
+      "source": "xianyu_official_mobile",
+      "collected_at": "2026-05-10T18:52:54+08:00",
+      "change_1d": 0.0,
+      "prev_price": 3180
+    },
+    "aihuishou": {
+      "base_price": 1681,
+      "after_coupon": null,
+      "currency": "CNY",
+      "source": "aihuishou_mobile_v2",
+      "collected_at": "2026-05-12T13:32:47+08:00",
+      "change_1d": 0.0,
+      "prev_price": 1930
+    },
+    "baseline_date": "2026年4月",
+    "change_1d_by_platform": {
+      "xianyu_market": 0.0,
+      "xianyu_official": 0.0,
+      "aihuishou": 0.0,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": 0.0
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "goal_cards": [],
+  "reviews": [],
+  "daily_summaries": [
+    {
+      "summary_date": "2026-05-16",
+      "summary_index": 1,
+      "final_output": "今日无明确交付（未创建goal_card，全天无结构化目标推进）",
+      "goal_delta": "无法对比——10:00问完5题后未形成goal_card，目标未锁定就散了",
+      "pretend_effort": "10:00-12:00：问完5题后无后续，既没有写goal_card也没有推进任何工作",
+      "effective_action": "无有效动作——全天未锁定目标，无任何实质推进",
+      "verdict": "假装努力",
+      "tomorrow_first_cut": "明天第一刀：10:00五题答完后，必须现场写出goal_card的deliverable和deadline才能离开对话",
+      "coach_note": "今天核心问题——五题问完就散了，根本没形成goal_card。10:05心跳显示ask_5_questions，但没有任何后续动作，18:04/19:05心跳全是skipped。说明Phase1只跑了形没跑神。五题是入口，goal_card才是锚点。明天必须强制闭环：五题→写卡片，否则按假装努力处理。"
+    }
+  ],
+  "heartbeat_logs": [
+    {
+      "heartbeat_time": "2026-05-16 10:05:12",
+      "node": "10:00",
+      "event_type": "goal_start",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-16.json",
+      "active_card_found": false,
+      "action_taken": "ask_5_questions",
+      "push_status": "success",
+      "reason": ""
+    },
+    {
+      "heartbeat_time": "2026-05-16 12:03:42",
+      "node": "12:00",
+      "event_type": "segment_close",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-16.json",
+      "active_card_found": false,
+      "action_taken": "none",
+      "push_status": "success",
+      "reason": ""
+    },
+    {
+      "heartbeat_time": "2026-05-16 13:26:37",
+      "node": "13:30",
+      "event_type": "heartbeat",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-16.json",
+      "active_card_found": false,
+      "action_taken": "none",
+      "push_status": "skipped",
+      "reason": "no active goal_card"
+    },
+    {
+      "heartbeat_time": "2026-05-16 18:04:38",
+      "node": "18:00",
+      "event_type": "segment_close",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-16.json",
+      "active_card_found": false,
+      "action_taken": "none",
+      "push_status": "skipped",
+      "reason": "no active goal_card"
+    },
+    {
+      "heartbeat_time": "2026-05-16 19:05:57",
+      "node": "19:00",
+      "event_type": "heartbeat",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-16.json",
+      "active_card_found": false,
+      "action_taken": "none",
+      "push_status": "skipped",
+      "reason": "no active goal_card"
+    },
+    {
+      "heartbeat_time": "2026-05-16 20:56:03",
+      "node": "21:00",
+      "event_type": "daily_close",
+      "goal_card_path": "skills/anti-involution-coach/data/goal_cards/2026-05-16.json",
+      "active_card_found": false,
+      "action_taken": "phase3_summary",
+      "push_status": "pending",
+      "reason": "no goal_card created today - proceeding with Phase3 based on heartbeat trajectory"
+    }
+  ]
+}

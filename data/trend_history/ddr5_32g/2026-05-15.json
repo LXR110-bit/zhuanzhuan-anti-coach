@@ -1,0 +1,39 @@
+{
+  "archived_at": "2026-05-15T18:42:43.075623",
+  "scan_time": "2026-05-15",
+  "product_id": "ddr5_32g",
+  "data": {
+    "xianyu_market": {
+      "price": 1799,
+      "currency": "CNY",
+      "change_1d": 94.49,
+      "collected_at": "2026-05-15T10:18:01+08:00",
+      "samples": [
+        1691.1,
+        1745.0,
+        1799,
+        1853.0,
+        1906.9
+      ],
+      "median": 1799,
+      "prev_price": 925
+    },
+    "xianyu_official": {},
+    "aihuishou": {
+      "base_price": 505,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-07T14:29:33+08:00",
+      "after_coupon": null,
+      "source": "aihuishou_mobile_v2"
+    },
+    "change_1d_by_platform": {
+      "xianyu_market": null,
+      "xianyu_official": null,
+      "aihuishou": null,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": null,
+    "baseline_date": "2026年5月"
+  }
+}

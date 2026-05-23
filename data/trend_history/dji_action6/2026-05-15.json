@@ -1,0 +1,48 @@
+{
+  "archived_at": "2026-05-15T18:42:43.347720",
+  "scan_time": "2026-05-15",
+  "product_id": "dji_action6",
+  "data": {
+    "name": "DJI Action 6",
+    "xianyu_market": {
+      "price": 1656,
+      "samples": [
+        1560,
+        1608,
+        1656,
+        1704,
+        1752
+      ],
+      "median": 1656,
+      "currency": "CNY",
+      "change_1d": 0.0,
+      "collected_at": "2026-05-06T21:53:00+08:00",
+      "prev_price": 1656
+    },
+    "xianyu_official": {
+      "price": null,
+      "currency": "CNY",
+      "source": "xianyu_official_mobile",
+      "collected_at": "2026-05-06T21:53:00+08:00",
+      "change_1d": null,
+      "prev_price": null
+    },
+    "aihuishou": {
+      "base_price": null,
+      "after_coupon": null,
+      "currency": "CNY",
+      "source": "aihuishou_mobile_v2",
+      "collected_at": "2026-05-06T21:53:00+08:00",
+      "change_1d": null,
+      "prev_price": null
+    },
+    "baseline_date": "2026年4月",
+    "change_1d_by_platform": {
+      "xianyu_market": null,
+      "xianyu_official": null,
+      "aihuishou": null,
+      "zhuanzhuan_recycle": null
+    },
+    "change_1d": null
+  }
+}

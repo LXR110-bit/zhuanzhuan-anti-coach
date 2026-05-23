@@ -1,0 +1,69 @@
+{
+  "goal_cards": [],
+  "reviews": [],
+  "daily_summaries": [
+    {
+      "summary_date": "2026-05-17",
+      "summary_index": 1,
+      "final_output": "今日无明确交付（周日未开goal_card，全天空转）",
+      "goal_delta": "无法对比——无goal_card，无目标锚点",
+      "pretend_effort": "全天4次心跳全是skipped：10:00/12:00/13:30/18:00均无动作",
+      "effective_action": "无有效动作",
+      "verdict": "假装努力",
+      "tomorrow_first_cut": "周一10:00五题→写card必须现场闭环，否则按假装努力处理",
+      "coach_note": "连续第2天周日无goal_card。昨天coach_note已预警五题→写card闭环问题，今天直接没跑Phase1。明天周一，必须强制执行：五题问完现场写card，否则视为假装努力退回到Phase1。"
+    }
+  ],
+  "heartbeat_logs": [
+    {
+      "heartbeat_time": "2026-05-17 10:04:48",
+      "node": "10:04",
+      "event_type": "goal_start",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-17.json",
+      "active_card_found": false,
+      "action_taken": "new_session",
+      "push_status": "success",
+      "reason": ""
+    },
+    {
+      "heartbeat_time": "2026-05-17 12:03:40",
+      "node": "12:00",
+      "event_type": "segment_close",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-17.json",
+      "active_card_found": false,
+      "action_taken": "no_active_card",
+      "push_status": "success",
+      "reason": ""
+    },
+    {
+      "heartbeat_time": "2026-05-17 13:27:11",
+      "node": "13:30",
+      "event_type": "heartbeat",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-17.json",
+      "active_card_found": false,
+      "action_taken": "no_active_card",
+      "push_status": "skipped",
+      "reason": "无active goal_card"
+    },
+    {
+      "heartbeat_time": "2026-05-17 18:05:11",
+      "node": "18:00",
+      "event_type": "heartbeat",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-17.json",
+      "active_card_found": false,
+      "action_taken": "no_active_card",
+      "push_status": "skipped",
+      "reason": "无active goal_card"
+    },
+    {
+      "heartbeat_time": "2026-05-17 20:56:04",
+      "node": "21:00",
+      "event_type": "segment_close",
+      "goal_card_path": "/app/data/所有对话/主对话/anti-pretend-effort/skills/anti-involution-coach/data/goal_cards/2026-05-17.json",
+      "active_card_found": false,
+      "action_taken": "周日无goal_card",
+      "push_status": "success",
+      "reason": ""
+    }
+  ]
+}
