@@ -55,3 +55,14 @@ GOAL_CARD_DIR=/tmp/anti-coach-test python3 scripts/goal_card_manager.py heartbea
 ```bash
 tail -50 data/logs/anti_coach_runtime.jsonl
 ```
+
+## 提交前防串台
+
+扣子提交前必须执行：
+
+```bash
+python3 scripts/validate_channels.py
+python3 scripts/validate_commit_boundary.py
+```
+
+详细规则见 `docs/扣子防串台提交规范.md`。
