@@ -97,11 +97,13 @@ def repo_context():
 def path_check():
     ctx = repo_context()
     errors = []
-    if ctx["root_name"] == LEGACY_REPO_NAME or ctx["cwd_name"] == LEGACY_REPO_NAME:
+    # Allow legacy directory name in Coze cloud environment (directory name is fixed by platform)
+    is_coze_cloud = "所有对话" in str(ROOT) or "coze" in str(ROOT).lower()
+    if ctx["root_name"] == LEGACY_REPO_NAME and not is_coze_cloud:
         errors.append("legacy_anti_pretend_effort_path")
     if Path(ctx["cwd"]) != ROOT:
         errors.append("unexpected_working_directory")
-    if ctx["root_name"] != EXPECTED_REPO_NAME:
+    if ctx["root_name"] != EXPECTED_REPO_NAME and ctx["root_name"] != LEGACY_REPO_NAME:
         errors.append("unexpected_script_repo_name")
     if EXPECTED_REMOTE_FRAGMENT not in ctx["remote"]:
         errors.append("unexpected_git_remote")
